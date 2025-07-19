@@ -1,14 +1,14 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2025-07-15',
-  devtools: { enabled: true },
-  modules: ['@nuxt/eslint', '@nuxt/ui'],
-  runtimeConfig: {
+	modules: ["@nuxt/eslint", "@nuxt/ui", "@nuxtjs/google-fonts"],
+	devtools: { enabled: true },
+	runtimeConfig: {
 		public: {
 			apiBaseUrl: process.env.API_BASE_URL || "http://localhost:8000",
 		},
 	},
-  eslint: {
+	compatibilityDate: "2025-07-15",
+	eslint: {
 		config: {
 			stylistic: {
 				semi: true,
@@ -18,4 +18,9 @@ export default defineNuxtConfig({
 			},
 		},
 	},
-})
+	googleFonts: {
+		families: {
+			Roboto: true,
+		},
+	},
+});
