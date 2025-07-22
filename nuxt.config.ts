@@ -5,6 +5,7 @@ export default defineNuxtConfig({
 		"@nuxt/ui",
 		"@nuxtjs/google-fonts",
 		"@compodium/nuxt",
+		"@nuxt/image",
 	],
 	devtools: { enabled: true },
 	css: ["~/assets/css/main.css"],
