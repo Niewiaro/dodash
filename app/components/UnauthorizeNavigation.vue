@@ -8,9 +8,14 @@ const items = ref<NavigationMenuItem[]>([
 		to: "/",
 	},
 	{
-		label: "Me",
-		icon: "i-heroicons-user-solid",
-		to: "/me",
+		label: "Register",
+		icon: "i-lucide-clipboard-pen",
+		to: "/register",
+	},
+	{
+		label: "Login",
+		icon: "i-lucide-log-in",
+		to: "/login",
 	},
 	{
 		label: "GitHub",

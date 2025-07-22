@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import AuthorizeNavigation from "~/components/AuthorizeNavigation.vue";
+import UnauthorizeNavigation from "~/components/UnauthorizeNavigation.vue";
 </script>
 
 <template>
 	<div>
-		<AuthorizeNavigation />
+		<UnauthorizeNavigation />
 		<slot />
 	</div>
 </template>
