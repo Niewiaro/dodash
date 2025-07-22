@@ -1,9 +1,10 @@
 <template>
-	<div>
+	<UApp>
 		<NuxtLayout>
 			<NuxtPage />
+			<UToaster />
 		</NuxtLayout>
-	</div>
+	</UApp>
 </template>
 
 <script setup lang="ts">
