@@ -49,6 +49,14 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 <template>
 	<div class="min-h-screen flex items-center justify-center px-4">
 		<UCard>
+			<template #header>
+				<h1 class="text-2xl font-bold text-center">
+					Login
+				</h1>
+				<p class="text-center text-gray-500">
+					Please enter your credentials
+				</p>
+			</template>
 			<UForm
 				:schema="schema"
 				:state="state"
@@ -81,6 +89,17 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 					Submit
 				</UButton>
 			</UForm>
+
+			<template #footer>
+				<div class="text-center">
+					<p>No account?</p>
+					<UButton
+						label="Register"
+						to="/register"
+						size="lg"
+					/>
+				</div>
+			</template>
 		</UCard>
 	</div>
 </template>

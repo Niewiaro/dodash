@@ -53,6 +53,15 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 <template>
 	<div class="min-h-screen flex items-center justify-center px-4">
 		<UCard>
+			<template #header>
+				<h1 class="text-2xl font-bold text-center">
+					Register
+				</h1>
+				<p class="text-center text-gray-500">
+					Please enter your details
+				</p>
+			</template>
+
 			<UForm
 				:schema="schema"
 				:state="state"
