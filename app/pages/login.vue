@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import * as z from "zod";
 import type { FormSubmitEvent } from "@nuxt/ui";
+import { useAuth } from "~/composables/useAuth";
+
+definePageMeta({
+	middleware: "guest",
+});
 
 const schema = z.object({
 	email: z.string().email("Invalid email"),
@@ -15,22 +20,23 @@ const state = reactive<Partial<Schema>>({
 });
 
 const toast = useToast();
-async function onSubmit(event: FormSubmitEvent<Schema>) {
-	const { data, error: fetchError } = await useFetch("/api/auth/login", {
-		method: "POST",
-		body: state,
-	});
+const { login } = useAuth();
 
-	if (fetchError.value) {
-		const rawMessage = fetchError.value?.data?.statusMessage;
-		let parsedDescription = undefined;
+async function onSubmit(event: FormSubmitEvent<Schema>) {
+	try {
+		await login(state.email!, state.password!);
+		await navigateTo("/me");
+	}
+	catch (error: any) {
+		let parsedDescription: string | undefined;
 
 		try {
-			const parsed = JSON.parse(rawMessage);
+			const raw = typeof error?.statusMessage === "string" ? error.statusMessage : "Login error";
+			const parsed = JSON.parse(raw);
 			parsedDescription = parsed.detail || parsed.message || parsed.error || parsed;
 		}
 		catch {
-			parsedDescription = rawMessage || "Login error";
+			parsedDescription = "Login failed";
 		}
 
 		toast.add({
@@ -39,9 +45,6 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 			color: "error",
 			icon: "i-lucide-flag-triangle-right",
 		});
-	}
-	else {
-		await navigateTo("/me");
 	}
 }
 </script>

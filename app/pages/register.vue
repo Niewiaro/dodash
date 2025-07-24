@@ -2,6 +2,10 @@
 import * as z from "zod";
 import type { FormSubmitEvent } from "@nuxt/ui";
 
+definePageMeta({
+	middleware: "guest",
+});
+
 const schema = z.object({
 	email: z.string().email("Invalid email"),
 	first_name: z.string(),
@@ -19,33 +23,37 @@ const state = reactive<Partial<Schema>>({
 });
 
 const toast = useToast();
-async function onSubmit(event: FormSubmitEvent<Schema>) {
-	const { data, error: fetchError } = await useFetch("/api/auth/register", {
-		method: "POST",
-		body: state,
-	});
+const { login } = useAuth();
 
-	if (fetchError.value) {
-		const rawMessage = fetchError.value?.data?.statusMessage;
-		let parsedDescription = undefined;
+async function onSubmit(event: FormSubmitEvent<Schema>) {
+	try {
+		await $fetch("/api/auth/register", {
+			method: "POST",
+			body: state,
+		});
+
+		await login(state.email!, state.password!);
+
+		await navigateTo("/me");
+	}
+	catch (error: any) {
+		let parsedDescription: string | undefined;
 
 		try {
-			const parsed = JSON.parse(rawMessage);
+			const raw = typeof error?.statusMessage === "string" ? error.statusMessage : "Registration failed";
+			const parsed = JSON.parse(raw);
 			parsedDescription = parsed.detail || parsed.message || parsed.error || parsed;
 		}
 		catch {
-			parsedDescription = rawMessage || "Login error";
+			parsedDescription = "Registration failed";
 		}
 
 		toast.add({
 			title: "Error",
 			description: parsedDescription,
 			color: "error",
-			icon: "i-lucide-flag-triangle-right",
+			icon: "i-lucide-alert-triangle",
 		});
-	}
-	else {
-		await navigateTo("/login");
 	}
 }
 </script>
