@@ -24,6 +24,11 @@ const items = ref<NavigationMenuItem[]>([
 		to: "https://github.com/Niewiaro",
 		target: "_blank",
 	},
+	{
+		label: "Me",
+		icon: "i-lucide-user",
+		to: "/me",
+	},
 ]);
 </script>
 
