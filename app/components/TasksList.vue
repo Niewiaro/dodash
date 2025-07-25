@@ -85,6 +85,13 @@ const onComplete = async (id: string) => {
 
 					<div class="flex gap-2">
 						<UButton
+							size="xs"
+							color="info"
+							variant="soft"
+							icon="i-lucide-eye"
+							:to="`/tasks/${task.id}`"
+						/>
+						<UButton
 							v-if="!task.is_completed"
 							size="xs"
 							color="success"
