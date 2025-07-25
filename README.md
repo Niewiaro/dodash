@@ -185,9 +185,17 @@ jobs:
 
 ## 🖼️ Screenshots <a name="screenshots"></a>
 
-*(Coming soon: View page, Edit form, Auth UI...)*
+<figure>
+  <img src="images/home.png" alt="Home Page" />
+  <figcaption><em>Figure 1: Home Page of the app.</em></figcaption>
+  <hr>
+</figure>
 
----
+<figure>
+  <img src="images/tasks.png" alt="Tasks" />
+  <figcaption><em>Figure 2: List of tasks in the app.</em></figcaption>
+  <hr>
+</figure>
 
 <!-- Badges -->
 
