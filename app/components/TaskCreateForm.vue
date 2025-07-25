@@ -2,8 +2,20 @@
 import * as z from "zod";
 import type { FormSubmitEvent } from "@nuxt/ui";
 
-const { createTask } = useTasks();
+// Props
+const props = defineProps<{
+	task?: {
+		id?: string;
+		description?: string;
+		priority?: number;
+		due_date?: string | null;
+	};
+}>();
 
+// Task actions
+const { createTask, updateTask } = useTasks();
+
+// Form schema
 const schema = z.object({
 	description: z.string().min(1, "Description is required"),
 	priority: z.number().min(0).max(4),
@@ -17,33 +29,42 @@ const schema = z.object({
 
 type Schema = z.output<typeof schema>;
 
+// Form state
 const state = reactive<Partial<Schema>>({
-	description: "",
-	priority: 2,
-	due_date: "",
+	description: props.task?.description ?? "",
+	priority: props.task?.priority ?? 2,
+	due_date: props.task?.due_date ?? "",
 });
 
 const toast = useToast();
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
 	try {
-		await createTask({
+		const payload = {
 			description: state.description!,
 			priority: state.priority!,
 			due_date: state.due_date || null,
-		});
-		toast.add({ title: "Task created", color: "green", icon: "i-lucide-check" });
+		};
+		if (props.task?.id) {
+			await updateTask(props.task.id, payload);
+			toast.add({ title: "Task updated", color: "green", icon: "i-lucide-check" });
+			await navigateTo("/tasks");
+		}
+		else {
+			await createTask(payload);
+			toast.add({ title: "Task created", color: "green", icon: "i-lucide-check" });
+		}
 	}
 	catch (error: any) {
 		let parsedDescription: string | undefined;
 
 		try {
-			const raw = typeof error?.statusMessage === "string" ? error.statusMessage : "Create task error";
+			const raw = typeof error?.statusMessage === "string" ? error.statusMessage : "Task error";
 			const parsed = JSON.parse(raw);
 			parsedDescription = parsed.detail || parsed.message || parsed.error || parsed;
 		}
 		catch {
-			parsedDescription = "Failed to create task";
+			parsedDescription = "Something went wrong";
 		}
 
 		toast.add({
@@ -61,12 +82,13 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 		<UCard>
 			<template #header>
 				<h1 class="text-2xl font-bold text-center">
-					Task Create Form
+					{{ props.task?.id ? "Edit Task" : "Task Create Form" }}
 				</h1>
 				<p class="text-center text-gray-500">
-					Please fill out the form to create a new task.
+					{{ props.task?.id ? "Update the task details below." : "Please fill out the form to create a new task." }}
 				</p>
 			</template>
+
 			<UForm
 				:schema="schema"
 				:state="state"

@@ -94,6 +94,13 @@ const onComplete = async (id: string) => {
 						/>
 						<UButton
 							size="xs"
+							color="warning"
+							variant="soft"
+							icon="i-lucide-pencil"
+							:to="`/tasks/${task.id}/edit`"
+						/>
+						<UButton
+							size="xs"
 							color="error"
 							variant="soft"
 							icon="i-lucide-trash"

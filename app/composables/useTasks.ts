@@ -2,7 +2,7 @@ export const useTasks = () => {
 	const tasks = useState("tasks", () => [] as any[]);
 	const loading = ref(false);
 
-	// Pobierz wszystkie zadania
+	// Fetch all tasks
 	const fetchTasks = async () => {
 		loading.value = true;
 		try {
@@ -17,10 +17,10 @@ export const useTasks = () => {
 		}
 	};
 
-	// Pobierz jedno zadanie po ID
+	// Fetch a single task by ID
 	const getTask = async (id: string) => {
 		try {
-			const res = await $fetch(`/api/tasks/${id}`);
+			const res = await $fetch(`/api/tasks/${id}/get`);
 			return res;
 		}
 		catch (e) {
@@ -29,7 +29,7 @@ export const useTasks = () => {
 		}
 	};
 
-	// Utwórz nowe zadanie
+	// Create a new task
 	const createTask = async (taskData: {
 		description: string;
 		priority?: number;
@@ -42,26 +42,26 @@ export const useTasks = () => {
 		await fetchTasks();
 	};
 
-	// Zaktualizuj istniejące zadanie
+	// Update an existing task
 	const updateTask = async (id: string, updatedData: {
 		description: string;
 		priority?: number;
 		due_date?: string | null;
 	}) => {
-		await $fetch(`/api/tasks/${id}`, {
+		await $fetch(`/api/tasks/${id}/put`, {
 			method: "PUT",
 			body: updatedData,
 		});
 		await fetchTasks();
 	};
 
-	// Usuń zadanie
+	// Delete a task
 	const deleteTask = async (id: string) => {
 		await $fetch(`/api/tasks/${id}/delete`, { method: "DELETE" });
 		await fetchTasks();
 	};
 
-	// Ukończ zadanie
+	// Mark a task as complete
 	const completeTask = async (id: string) => {
 		await $fetch(`/api/tasks/${id}/complete`, { method: "PUT" });
 		await fetchTasks();
