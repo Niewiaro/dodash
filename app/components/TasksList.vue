@@ -1,10 +1,23 @@
 <script setup lang="ts">
 const { tasks, loading, fetchTasks, deleteTask, completeTask } = useTasks();
 const toast = useToast();
+let intervalId: ReturnType<typeof setInterval>;
 
 onMounted(() => {
 	fetchTasks();
+
+	intervalId = setInterval(() => {
+		fetchTasks();
+	}, 10000); // Refresh tasks every 10 seconds
 });
+
+onUnmounted(() => {
+	clearInterval(intervalId);
+});
+
+const totalTasks = computed(() => tasks.value.length);
+const completedTasks = computed(() => tasks.value.filter(t => t.is_completed).length);
+const pendingTasks = computed(() => totalTasks.value - completedTasks.value);
 
 const onDelete = async (id: string) => {
 	try {
@@ -54,6 +67,12 @@ const onComplete = async (id: string) => {
 			v-else
 			class="space-y-4"
 		>
+			<div class="mb-4 text-sm text-gray-500">
+				Total: {{ totalTasks }} |
+				Done: {{ completedTasks }} |
+				Pending: {{ pendingTasks }}
+			</div>
+
 			<UCard
 				v-for="task in tasks"
 				:key="task.id"
