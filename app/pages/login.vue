@@ -24,8 +24,10 @@ const { login } = useAuth();
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
 	try {
-		await login(state.email!, state.password!);
-		await navigateTo("/me");
+		await login({
+			email: state.email!,
+			password: state.password!,
+		});
 	}
 	catch (error: any) {
 		let parsedDescription: string | undefined;

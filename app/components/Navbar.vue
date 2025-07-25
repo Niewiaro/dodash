@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from "@nuxt/ui";
 
+const hydrated = ref(false);
+onMounted(() => {
+	hydrated.value = true;
+});
+
 const { isAuthenticated, user, logout } = useAuth();
 
 const items = computed<NavigationMenuItem[]>(() => {
@@ -19,9 +24,23 @@ const items = computed<NavigationMenuItem[]>(() => {
 		},
 	];
 
+	if (!hydrated.value) {
+		return baseItems;
+	}
+
 	if (isAuthenticated.value) {
 		return [
 			...baseItems,
+			{
+				label: "Tasks",
+				icon: "i-lucide-list-checks",
+				to: "/tasks",
+			},
+			{
+				label: "Create Task",
+				icon: "i-lucide-plus",
+				to: "/tasks/create",
+			},
 			{
 				label: user.value?.first_name || "Me",
 				icon: "i-lucide-user",
@@ -30,8 +49,9 @@ const items = computed<NavigationMenuItem[]>(() => {
 			{
 				label: "Logout",
 				icon: "i-lucide-log-out",
-				click: async () => {
+				onClick: async () => {
 					await logout();
+					navigateTo("/login");
 				},
 			},
 		];

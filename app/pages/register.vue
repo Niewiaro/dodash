@@ -23,18 +23,16 @@ const state = reactive<Partial<Schema>>({
 });
 
 const toast = useToast();
-const { login } = useAuth();
+const { register } = useAuth();
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
 	try {
-		await $fetch("/api/auth/register", {
-			method: "POST",
-			body: state,
+		await register({
+			email: state.email!,
+			first_name: state.first_name!,
+			last_name: state.last_name!,
+			password: state.password!,
 		});
-
-		await login(state.email!, state.password!);
-
-		await navigateTo("/me");
 	}
 	catch (error: any) {
 		let parsedDescription: string | undefined;
